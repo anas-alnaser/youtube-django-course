@@ -91,4 +91,4 @@ class UserOrderTestCase(TestCase):
         # We *expect* to be denied.
         # We check that the server returned a "Forbidden" (403) status code,
         # proving our API security (e.g., IsAuthenticated) is working.
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

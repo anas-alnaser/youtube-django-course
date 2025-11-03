@@ -71,6 +71,7 @@ class OrderSerializer(serializers.ModelSerializer):
     # *each one* using the 'OrderItemSerializer'."
     # 'many=True' means we expect a list of items.
     # 'read_only=True' means this is for output only (we can't create orders this way).
+    order_id = serializers.UUIDField(read_only=True)
     items = OrderItemSerializer(many=True, read_only=True)
 
     # --- CUSTOM FIELD ---

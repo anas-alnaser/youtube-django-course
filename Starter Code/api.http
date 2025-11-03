@@ -1,11 +1,72 @@
 GET http://localhost:8000/product/ HTTP/1.1
 ###
-POST http://localhost:8000/product/ HTTP/1.1
+
+GET http://localhost:8000/product/2/  HTTP/1.1
+
+###
+DELETE http://localhost:8000/product/2/  HTTP/1.1
+
+###
+PUT http://localhost:8000/product/2/  HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxOTE4Nzc5LCJpYXQiOjE3NjE5MTg0NzksImp0aSI6IjQ0OTVmOTA2ZjYxNzQ4ZWZhNjA4YzIxOWM1MmZhZjdlIiwidXNlcl9pZCI6IjEifQ.9xcZzirO_gHLwVFVWehXoWp4oiCuwymKjFC_948ow68
 
 {
     "name":"Television",
     "price":300.00,
     "stock":14,
     "description":"An amazing new Tv"
+}
+###
+POST http://localhost:8000/product/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxNzQyMjU4LCJpYXQiOjE3NjE3NDE5NTgsImp0aSI6ImY1NmE2ZDRiYWRiYjQxNjE4OGI0MDA2MWNjYzExMDZiIiwidXNlcl9pZCI6IjEifQ.9gJdvuDxVTuLiCMZgNt1dwJ4-kRs8kKzPbdVH-zVqKw
+
+{
+    "name":"Television",
+    "price":300.00,
+    "stock":14,
+    "description":"An amazing new Tv"
+}
+
+###
+
+POST http://localhost:8000/api/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "admin",
+    "password" : "test"
+}
+###
+POST http://localhost:8000/api/token/refresh/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "refresh":"yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2MjAwMzM4MCwiaWF0IjoxNzYxOTE2OTgwLCJqdGkiOiI1N2ZkN2Q5NzVhMzc0ZTlkODU4OTg5YzEzZDMwYTIzZCIsInVzZXJfaWQiOiIxIn0.lxH0yLAlrBgU-4SyiS3vq9m1-x3ygzqIZ9XpYss8MCw"
+}
+
+###
+
+GET http://localhost:8000/orders HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyMTIyNzMxLCJpYXQiOjE3NjIxMjI0MzEsImp0aSI6IjFjMTNkODk5YTI2NjQwMTNiMDQ4ODA1YmZkN2MyZDViIiwidXNlcl9pZCI6IjEifQ.XRhZBqJT3cIVqJja6QLUmcDrXW0v1dY6rofyrC755Bk
+
+###
+POST http://localhost:8000/orders/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyMTg1NDYyLCJpYXQiOjE3NjIxODUxNjIsImp0aSI6IjhjNGJiODIyZmIxNzQ5ZGJiMWJlNzMwMmRiZDUwYjc0IiwidXNlcl9pZCI6IjEifQ.2glv87VJe77bgeOb7sbKDOoEX5zvtw78dqCtF3vY690
+
+{
+	"status": "Pending",
+    "user":1,
+	"items": [
+		{
+				"product": 2,
+				"quantity": 2
+		},
+		{
+				"product": 3,
+				"quantity": 1
+		}
+	]	
 }
