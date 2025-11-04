@@ -11,8 +11,13 @@ from rest_framework.views import APIView
 
 from api.filters import InStockFilterBackend, OrderFilter, ProductFilter
 from api.models import Order, Product, User
-from api.serializers import (OrderSerializer, ProductInfoSerializer,
-                             ProductSerializer)
+from api.serializers import (
+    OrderSerializer,
+    ProductInfoSerializer,
+    ProductSerializer,
+    OrderCreateSerializer,
+    UserSerializer,
+)
 
 # --- "GENERIC" CLASS-BASED VIEWS (The easy way) ---
 # These are pre-built views from DRF that handle common patterns.
@@ -113,6 +118,15 @@ class OrderViewSet(viewsets.ModelViewSet):
     filterset_class = OrderFilter
     filter_backends = [DjangoFilterBackend]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_serializer_class(self):
+        # you can check if it post direct but he choose create here by self.request.method =='post'
+        if self.action == 'create' or self.action == 'update':
+            return OrderCreateSerializer
+        return super().get_serializer_class()
+
     def get_queryset(self):
         qs = super().get_queryset()
         if not self.request.user.is_staff:
@@ -195,3 +209,9 @@ class ProductDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ['PUT', 'DELETE', 'PATCH']:
             self.permission_classes = [IsAdminUser]
         return super().get_permissions()
+
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    pagination_class = None

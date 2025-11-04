@@ -76,7 +76,9 @@ class Order(models.Model):
     # 'ForeignKey' creates a "many-to-one" link.
     # One User can have MANY Orders.
     # 'on_delete=models.CASCADE' means "if the user is deleted, delete all their orders."
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='orders')
 
     # 'auto_now_add=True' automatically sets this to the current time
     # *only* when the order is first created.

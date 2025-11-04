@@ -1,13 +1,18 @@
 from rest_framework import serializers
 from .models import *
-
+from django.db import transaction
 # --- SERIALIZERS ---
 
 # (This UserSerializer is commented out, but it's how you *would* serialize a user)
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('id', 'username', 'is_staff')
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'is_staff', 'orders')
+        #exclude = ('password','user_permission')
+        # fields = ('__all__')
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -57,6 +62,49 @@ class OrderItemSerializer(serializers.ModelSerializer):
         # The serializer is smart enough to find the '@property'
         # on the model and include it as a read-only field.
         fields = ('product_name', 'product_price', 'quantity', 'item_subtotal')
+
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+
+    class OrderItemCreateSerializer(serializers.ModelSerializer):
+
+        class Meta:
+            model = OrderItem
+            fields = ('product', 'quantity')
+
+    order_id = serializers.UUIDField(read_only=True)
+    items = OrderItemCreateSerializer(many=True, required=False)
+
+    def update(self, instance, validated_data):
+        orderitem_data = validated_data.pop('items')
+
+        with transaction.atomic():
+            instance = super().update(instance, validated_data)
+
+            if orderitem_data is not None:
+                #clear exiting items(optional, depends on requarment)
+                instance.items.all().delete()
+                #recreate it with the updateded data
+                for item in orderitem_data:
+                    OrderItem.objects.create(order=instance, **item)
+        return instance
+
+    def create(self, validated_data):
+        orderitem_data = validated_data.pop('items')
+
+        with transaction.atomic():
+
+            order = Order.objects.create(**validated_data)
+
+            for item in orderitem_data:
+                OrderItem.objects.create(order=order, **item)
+
+        return order
+
+    class Meta:
+        model = Order
+        fields = ('order_id', 'user', 'status', 'items')
+        extra_kwargs = {'user': {'read_only': True}}
 
 
 class OrderSerializer(serializers.ModelSerializer):
